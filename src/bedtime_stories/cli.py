@@ -1,6 +1,10 @@
+import asyncio
 import os
 import argparse
+
+from dotenv import load_dotenv
 from bedtime_stories.openai.openai_adapter import OpenAIAdapter
+from bedtime_stories.tts.edge_tts import EdgeTTS, Gender
 
 def parse_args():
     parser = argparse.ArgumentParser(description="A tool to get you bedtime stories of your favourite genere")
@@ -9,17 +13,24 @@ def parse_args():
     return parser.parse_args()
 
 def init():
+    load_dotenv()
     if not os.getenv("OPENAI_KEY"):
         print("OPENAI_KEY is not present in environment variables")
         exit(1)
 
-def main():
+async def main():
     init()
     args = parse_args()
     print(f"Passed command line arguments: {args}")
     adapter = OpenAIAdapter(os.getenv("OPENAI_KEY"))
     story = adapter.get_me_a_story(args.genere)
-    print(story)
+    if args.mode == "read":
+        print(story)
+    elif args.mode == "text":
+        await EdgeTTS.speak(Gender.Male, story)
+
+def run_cli():
+    asyncio.run(main())
 
 if __name__ == "__main__":
     main()

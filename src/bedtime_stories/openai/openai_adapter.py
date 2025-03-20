@@ -13,10 +13,10 @@ class OpenAIAdapter:
         if attributes:
             request_line += f" with these attributes: {attributes}"
         print(f"Input line: {request_line}")
-        # response = self.client.responses.create(
-        #     model="gpt-4o",
-        #     instructions="You are a husband who is telling a bedtime story to your wife to make her fall asleep",
-        #     input=request_line,
-        # )
-        response = Response("Hello, this is the output text!")
+        response = self.client.responses.create(
+            model="gpt-4o",
+            instructions="You are a husband who is telling a bedtime story to your wife to make her fall asleep",
+            input=request_line,
+        )
+        # response = Response("Hello, this is the output text!")
         return response.output_text
